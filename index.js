@@ -36,6 +36,8 @@ const data = [
     },
 ];
 
+let localResults = {};
+
 const quiz = document.getElementById('quiz');
 const questions = document.getElementById('questions');
 const indicator = document.getElementById('indicator');
@@ -45,6 +47,9 @@ const btnRestart = document.getElementById('btn-restart');
 
 const renderQuestions = (index) => {
     renderIndicator(index + 1);
+
+    questions.dataset.currentStep = index;
+
     const renderAnswers = () => data[index].answers
         .map((answer) => `
             <li>
@@ -64,7 +69,36 @@ const renderQuestions = (index) => {
     `;
 };
 
-const renderResults = () => {};
+const renderResults = () => {
+    let content = '';
+
+    const getClassname = (answer, questionIndex) => {
+        let classname = '';
+
+        if(!answer.correct && localResults[questionIndex] === answer.id) {
+            classname = 'answer--invalid';
+        } else if(answer.correct) {
+            classname = 'answer--valid';
+        }
+
+        return classname;
+    }
+
+    const getAnswers = (questionIndex) => data[questionIndex].answers
+        .map((answer) => `<li class=${getClassname(answer, questionIndex)}>${answer.value}</li>`)
+        .join('');
+
+    data.forEach((question, index) => {
+        content += `
+        <div class="quiz-results-item">
+            <div class="quiz-results-item__question">${question.question}</div>
+            <ul class="quiz-results-item__answers">${getAnswers(index)}</ul>
+         </div>
+        `
+    });
+
+    results.innerHTML = content;
+};
 
 const renderIndicator = (currentStep) => {
     indicator.innerHTML = `${currentStep}/${data.length}`
@@ -72,16 +106,43 @@ const renderIndicator = (currentStep) => {
 
 quiz.addEventListener('change', (event) => {
     //логика ответа
+    if(event.target.classList.contains('answer-input')) {
+        localResults[event.target.name] = event.target.value;
+        btnNext.disabled = false;
+    }
 });
 
 quiz.addEventListener('click', (event) => {
     //нажатие на кнопку
     if(event.target.classList.contains('btn-next')){
-        console.log('Далее');
+        const nextQuestionIndex = Number(questions.dataset.currentStep) + 1;
+        
+        if(data.length === nextQuestionIndex){
+            questions.classList.add('questions--hidden');
+            indicator.classList.add('indicator--hidden');
+            results.classList.add('results--visible');
+            btnNext.classList.add('btn-next--hidden');
+            btnRestart.classList.add('btn-restart--visible');
+
+            renderResults();
+        } else {
+            renderQuestions(nextQuestionIndex);
+        }
+
+        btnNext.disabled = true;
     }
 
     if(event.target.classList.contains('btn-restart')){
-        console.log('С начала');
+        renderQuestions(0);
+        results.innerHTML = '';
+
+        questions.classList.remove('questions--hidden');
+        indicator.classList.remove('indicator--hidden');
+        results.classList.remove('results--visible');
+        btnNext.classList.remove('btn-next--hidden');
+        btnRestart.classList.remove('btn-restart--visible');
+
+        renderQuestions(0);
     }
 });
 

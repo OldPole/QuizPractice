@@ -18,6 +18,8 @@ body {
 
 .quiz-questions-item,
 .quiz-results-item {
+    margin-bottom: 20px;
+
     &__question {
         font-size: 20px;
         margin-bottom: 20px;
@@ -30,7 +32,9 @@ body {
     }
 }
 
-
+.quiz-results {
+    display: none;
+}
 
 .btn-next {
 
@@ -38,4 +42,23 @@ body {
 
 .btn-restart {
     display: none;
+}
+
+.questions--hidden,
+.indicator--hidden,
+.btn-next--hidden {
+    display: none;
+}
+
+.results--visible,
+.btn-restart--visible {
+    display: block;
+}
+
+.answer--invalid {
+    color: red;
+}
+
+.answer--valid {
+    color: green;
 }

@@ -15,6 +15,10 @@ body {
   margin-bottom: 20px;
 }
 
+.quiz-questions-item,
+.quiz-results-item {
+  margin-bottom: 20px;
+}
 .quiz-questions-item__question,
 .quiz-results-item__question {
   font-size: 20px;
@@ -27,6 +31,29 @@ body {
   list-style: none;
 }
 
+.quiz-results {
+  display: none;
+}
+
 .btn-restart {
   display: none;
+}
+
+.questions--hidden,
+.indicator--hidden,
+.btn-next--hidden {
+  display: none;
+}
+
+.results--visible,
+.btn-restart--visible {
+  display: block;
+}
+
+.answer--invalid {
+  color: red;
+}
+
+.answer--valid {
+  color: green;
 }/*# sourceMappingURL=styles.css.map */
